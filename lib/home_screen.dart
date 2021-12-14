@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:word_board_app/components/drawer.dart';
+import 'package:word_board_app/models/saved_words.dart';
 import 'package:word_board_app/screens/home.dart';
 import 'package:word_board_app/screens/past_word.dart';
 
 class HomeScreen extends StatefulWidget {
+  static final _savedWords = SavedWords.savedWords;
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -11,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var _savedWords = HomeScreen._savedWords;
   int _selectedIndex = 0;
   void _onItemTapped(int index) {
     setState(() {
@@ -22,6 +25,61 @@ class _HomeScreenState extends State<HomeScreen> {
     const Home(),
     const PastWord(),
   ];
+
+  void _openFavoriteWords() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              title: const Text(
+                'Favorite Words',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              centerTitle: true,
+              elevation: 0.0,
+              iconTheme: const IconThemeData(
+                color: Colors.black,
+                size: 25.0,
+              ),
+            ),
+            body: Container(
+              child: _savedWords.isNotEmpty
+                  ? ListView(
+                      children: _savedWords
+                          .map(
+                            (word) => Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                              child: Text(
+                                '${word[0].toUpperCase()}${word.substring(1)}',
+                                style: const TextStyle(
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    )
+                  : const Center(
+                      child: Text(
+                        'No favorite words',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
-              //TODO favorite words
-            },
+            onPressed: _openFavoriteWords,
             icon: const Icon(
               Icons.favorite,
               color: Colors.black,

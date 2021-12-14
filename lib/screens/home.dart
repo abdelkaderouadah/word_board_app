@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:word_board_app/components/card_item.dart';
 import 'package:word_board_app/models/random_word.dart';
+import 'package:word_board_app/models/saved_words.dart';
 import 'package:word_board_app/models/word.dart';
 import 'package:word_board_app/services/random_word_api.dart';
 import 'package:word_board_app/services/word_dictionary_api.dart';
 
 class Home extends StatefulWidget {
+  static final _savedWords = SavedWords.savedWords;
   const Home({Key? key}) : super(key: key);
 
   @override
@@ -13,6 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  var _savedWords = Home._savedWords;
   final _searchText = TextEditingController();
   String? result;
   WordDictionaryApi client = WordDictionaryApi();
@@ -88,89 +91,104 @@ class _HomeState extends State<Home> {
                 elevation: 4.0,
                 child: Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        child: (result == null)
-                            ? FutureBuilder<RandomWord>(
-                                future: futureWord,
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                    try {
-                                      return cardItem(
-                                          snapshot.data!.word,
-                                          snapshot.data!.definition,
-                                          snapshot.data!.pronunciation);
-                                    } catch (e) {
-                                      return Text(
-                                        errorMsg,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                        ),
-                                      );
-                                    }
-                                  } else if (snapshot.connectionState ==
-                                      ConnectionState.none) {
-                                    return const Text('Could not get word !');
-                                  }
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                },
-                              )
-                            : FutureBuilder(
-                                future: searchWord(_searchText.text),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.done) {
-                                    try {
-                                      return cardItem(
-                                        "${data!.word[0].toUpperCase()}${data!.word.substring(1)}",
-                                        "${data!.meanings[1].definitions[0].definition[0].toUpperCase()}${data!.meanings[1].definitions[0].definition.substring(1)}",
-                                        "${data!.meanings[1].definitions[0].example[0].toUpperCase()}${data!.meanings[1].definitions[0].example.substring(1)}",
-                                      );
-                                    } catch (e) {
-                                      return Text(
-                                        errorMsg,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: 'Roboto',
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                        ),
-                                      );
-                                    }
-                                  } else if (snapshot.connectionState ==
-                                      ConnectionState.none) {
-                                    return const Text('Could not get word !');
-                                  }
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                },
-                              ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.share_outlined),
-                            iconSize: 35,
+                  child: Container(
+                    child: (result == null)
+                        ? FutureBuilder<RandomWord>(
+                            future: futureWord,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                try {
+                                  final alreadySaved =
+                                      _savedWords.contains(snapshot.data!.word);
+                                  return cardItem(
+                                    snapshot.data!.word,
+                                    snapshot.data!.definition,
+                                    snapshot.data!.pronunciation,
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          alreadySaved
+                                              ? _savedWords
+                                                  .remove(snapshot.data!.word)
+                                              : _savedWords
+                                                  .add(snapshot.data!.word);
+                                        });
+                                      },
+                                      icon: Icon(
+                                        alreadySaved
+                                            ? Icons.favorite
+                                            : Icons.favorite_border_outlined,
+                                        color: alreadySaved ? Colors.red : null,
+                                      ),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  return Text(
+                                    errorMsg,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                }
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.none) {
+                                return const Text('Could not get word !');
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                          )
+                        : FutureBuilder(
+                            future: searchWord(_searchText.text),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.done) {
+                                final alreadySaved =
+                                    _savedWords.contains(data!.word);
+                                try {
+                                  return cardItem(
+                                    "${data!.word[0].toUpperCase()}${data!.word.substring(1)}",
+                                    "${data!.meanings[1].definitions[0].definition[0].toUpperCase()}${data!.meanings[1].definitions[0].definition.substring(1)}",
+                                    "${data!.meanings[1].definitions[0].example[0].toUpperCase()}${data!.meanings[1].definitions[0].example.substring(1)}",
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          alreadySaved
+                                              ? _savedWords.remove(data!.word)
+                                              : _savedWords.add(data!.word);
+                                        });
+                                      },
+                                      icon: Icon(
+                                        alreadySaved
+                                            ? Icons.favorite
+                                            : Icons.favorite_border_outlined,
+                                        color: alreadySaved ? Colors.red : null,
+                                      ),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  return Text(
+                                    errorMsg,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                }
+                              } else if (snapshot.connectionState ==
+                                  ConnectionState.none) {
+                                return const Text('Could not get word !');
+                              }
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.favorite_border_outlined),
-                            iconSize: 35,
-                          ),
-                        ],
-                      ),
-                    ],
                   ),
                 ),
               ),

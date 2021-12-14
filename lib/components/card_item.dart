@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-Widget cardItem(String word, String definition, String exemple) {
+Widget cardItem(
+    String word, String definition, String exemple, IconButton buttonSave) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.start,
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,6 +65,18 @@ Widget cardItem(String word, String definition, String exemple) {
           fontWeight: FontWeight.w400,
           color: Colors.black,
         ),
+      ),
+      const SizedBox(height: 40.0),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.share_outlined),
+            iconSize: 35,
+          ),
+          buttonSave,
+        ],
       ),
     ],
   );
