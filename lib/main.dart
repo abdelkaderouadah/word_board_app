@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Word Board',
       theme: ThemeData(
-        primaryColor: Colors.amber[700],
+        primaryColor: Colors.white,
       ),
       home: const HomeScreen(),
     );
