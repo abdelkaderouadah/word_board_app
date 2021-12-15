@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:word_board_app/components/drawer.dart';
+import 'package:word_board_app/components/favorite_card.dart';
 import 'package:word_board_app/models/saved_words.dart';
 import 'package:word_board_app/screens/home.dart';
 import 'package:word_board_app/screens/past_word.dart';
@@ -56,15 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? ListView(
                       children: _savedWords
                           .map(
-                            (word) => Padding(
-                              padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                              child: Text(
-                                '${word[0].toUpperCase()}${word.substring(1)}',
-                                style: const TextStyle(
-                                  fontSize: 20.0,
-                                ),
-                              ),
-                            ),
+                            (word) => FavoriteCard(
+                                word:
+                                    '${word[0].toUpperCase()}${word.substring(1)}'),
                           )
                           .toList(),
                     )

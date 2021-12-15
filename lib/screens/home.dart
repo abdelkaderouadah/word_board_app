@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:word_board_app/components/card_item.dart';
+import 'package:word_board_app/components/card_template.dart';
 import 'package:word_board_app/models/past_words.dart';
 import 'package:word_board_app/models/random_word.dart';
 import 'package:word_board_app/models/saved_words.dart';
@@ -103,12 +103,13 @@ class _HomeState extends State<Home> {
                                   ConnectionState.done) {
                                 final alreadySaved =
                                     _savedWords.contains(snapshot.data!.word);
+
                                 try {
-                                  return cardItem(
-                                    snapshot.data!.word,
-                                    snapshot.data!.definition,
-                                    snapshot.data!.pronunciation,
-                                    IconButton(
+                                  return CardTemplate(
+                                    word: snapshot.data!.word,
+                                    definition: snapshot.data!.definition,
+                                    exemple: snapshot.data!.pronunciation,
+                                    buttonSave: IconButton(
                                       onPressed: () {
                                         setState(() {
                                           (_savedWords.contains(
@@ -153,16 +154,19 @@ class _HomeState extends State<Home> {
                                   ConnectionState.done) {
                                 final alreadySaved =
                                     _savedWords.contains(data!.word);
-                                //past Words
-                                _pastWords.contains(data!.word)
-                                    ? _pastWords.remove(data!.word)
-                                    : _pastWords.add(data!.word);
                                 try {
-                                  return cardItem(
-                                    "${data!.word[0].toUpperCase()}${data!.word.substring(1)}",
-                                    "${data!.meanings[1].definitions[0].definition[0].toUpperCase()}${data!.meanings[1].definitions[0].definition.substring(1)}",
-                                    "${data!.meanings[1].definitions[0].example[0].toUpperCase()}${data!.meanings[1].definitions[0].example.substring(1)}",
-                                    IconButton(
+                                  //past Words
+                                  _pastWords.contains(data!.word)
+                                      ? _pastWords.remove(data!.word)
+                                      : _pastWords.add(data!.word);
+                                  return CardTemplate(
+                                    word:
+                                        "${data!.word[0].toUpperCase()}${data!.word.substring(1)}",
+                                    definition:
+                                        "${data!.meanings[1].definitions[0].definition[0].toUpperCase()}${data!.meanings[1].definitions[0].definition.substring(1)}",
+                                    exemple:
+                                        "${data!.meanings[1].definitions[0].example[0].toUpperCase()}${data!.meanings[1].definitions[0].example.substring(1)}",
+                                    buttonSave: IconButton(
                                       onPressed: () {
                                         setState(() {
                                           alreadySaved

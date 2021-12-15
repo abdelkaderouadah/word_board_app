@@ -19,39 +19,68 @@ class MyDrawer extends StatelessWidget {
               ),
             ),
           ),
-          drawerButton('Upgrade to Premium', const Icon(Icons.upcoming_sharp)),
-          drawerButton('Share with Friends', const Icon(Icons.share)),
-          drawerButton('Backup', const Icon(Icons.backup)),
-          drawerButton('Settings', const Icon(Icons.settings)),
+          DrawerButton(
+            icon: const Icon(Icons.upcoming_sharp),
+            onPressed: () {},
+            label: 'Upgrade to Premium',
+          ),
+          DrawerButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {},
+            label: 'Share with Friends',
+          ),
+          DrawerButton(
+            icon: const Icon(Icons.backup),
+            onPressed: () {},
+            label: 'Backup',
+          ),
+          DrawerButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {},
+            label: 'Settings',
+          ),
         ],
       ),
     );
   }
 }
 
-Widget drawerButton(String label, Icon icon) {
-  return TextButton(
-    onPressed: () {},
-    child: Padding(
-      padding: const EdgeInsets.all(18.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          icon,
-          Padding(
-            padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+class DrawerButton extends StatelessWidget {
+  final String label;
+  final Icon icon;
+  final Function onPressed;
+  const DrawerButton({
+    Key? key,
+    required this.icon,
+    required this.onPressed,
+    required this.label,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () => onPressed,
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            icon,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
