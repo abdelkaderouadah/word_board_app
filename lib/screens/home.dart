@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:word_board_app/components/card_item.dart';
+import 'package:word_board_app/models/past_words.dart';
 import 'package:word_board_app/models/random_word.dart';
 import 'package:word_board_app/models/saved_words.dart';
 import 'package:word_board_app/models/word.dart';
@@ -8,6 +9,7 @@ import 'package:word_board_app/services/word_dictionary_api.dart';
 
 class Home extends StatefulWidget {
   static final _savedWords = SavedWords.savedWords;
+  static final _pastWords = PastWords.pastWords;
   const Home({Key? key}) : super(key: key);
 
   @override
@@ -15,7 +17,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var _savedWords = Home._savedWords;
+  final _savedWords = Home._savedWords;
+  final _pastWords = Home._pastWords;
   final _searchText = TextEditingController();
   String? result;
   WordDictionaryApi client = WordDictionaryApi();
@@ -98,9 +101,9 @@ class _HomeState extends State<Home> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
+                                final alreadySaved =
+                                    _savedWords.contains(snapshot.data!.word);
                                 try {
-                                  final alreadySaved =
-                                      _savedWords.contains(snapshot.data!.word);
                                   return cardItem(
                                     snapshot.data!.word,
                                     snapshot.data!.definition,
@@ -108,7 +111,8 @@ class _HomeState extends State<Home> {
                                     IconButton(
                                       onPressed: () {
                                         setState(() {
-                                          alreadySaved
+                                          (_savedWords.contains(
+                                                  snapshot.data!.word))
                                               ? _savedWords
                                                   .remove(snapshot.data!.word)
                                               : _savedWords
@@ -149,6 +153,10 @@ class _HomeState extends State<Home> {
                                   ConnectionState.done) {
                                 final alreadySaved =
                                     _savedWords.contains(data!.word);
+                                //past Words
+                                _pastWords.contains(data!.word)
+                                    ? _pastWords.remove(data!.word)
+                                    : _pastWords.add(data!.word);
                                 try {
                                   return cardItem(
                                     "${data!.word[0].toUpperCase()}${data!.word.substring(1)}",

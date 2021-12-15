@@ -68,12 +68,11 @@ Widget cardItem(
       ),
       const SizedBox(height: 40.0),
       Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.share_outlined),
-            iconSize: 35,
           ),
           buttonSave,
         ],

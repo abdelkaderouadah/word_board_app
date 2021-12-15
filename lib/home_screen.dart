@@ -6,6 +6,7 @@ import 'package:word_board_app/screens/past_word.dart';
 
 class HomeScreen extends StatefulWidget {
   static final _savedWords = SavedWords.savedWords;
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -13,7 +14,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var _savedWords = HomeScreen._savedWords;
+  final _savedWords = HomeScreen._savedWords;
+
   int _selectedIndex = 0;
   void _onItemTapped(int index) {
     setState(() {
@@ -113,10 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _widgetOptions,
-      ),
+      //IndexedStack:Creates a [Stack] widget that paints a single child.
+      body: _widgetOptions[_selectedIndex],
+
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
